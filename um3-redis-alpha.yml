@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: um3-redis-dep-alpha
+  namespace: ava-club
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: um3-redis-pod-alpha
+  template:
+    metadata:
+      labels:
+        app: um3-redis-pod-alpha
+    spec:
+      nodeSelector:
+        type: worker
+      containers:
+        - name: um3-redis-alpha
+          ports:
+            - containerPort: 6379
+          image: 10.96.0.3:5000/redis:6-alpine
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: um3-redis-svc-alpha
+  namespace: ava-club
+spec:
+  type: NodePort
+  selector:
+    app: um3-redis-pod-alpha
+  ports:
+    - protocol: TCP
+      port: 6379
+      nodePort: 31313

@@ -1,0 +1,8 @@
+version: '3.3'
+
+services:
+  UserManagement:
+    image: ${DOCKER_REGISTRY}/user-management:${Version}
+    build:
+      context: .
+      dockerfile: src/EndPoint/UserManagement/Dockerfile

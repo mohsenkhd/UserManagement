@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usermanagement3-dep
+  namespace: ava-club
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usermanagement3-pod
+  template:
+    metadata:
+      labels:
+        app: usermanagement3-pod
+    spec:
+      nodeSelector:
+        type: worker
+      containers:
+        - name: usermanagement
+          envFrom:
+            - configMapRef:
+                name: base-conf
+            - configMapRef:
+                name: usermanagement3-conf
+            - configMapRef:
+                name: cors-conf
+          ports:
+            - containerPort: 80
+          image: 10.96.0.3:5000/user-management:3.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 300m
+              memory: 500M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usermanagement3-svc
+  namespace: ava-club
+spec:
+  type: ClusterIP
+  selector:
+    app: usermanagement3-pod
+  ports:
+    - name: usermanagement
+      protocol: TCP
+      port: 80
