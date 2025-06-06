@@ -41,7 +41,7 @@ namespace UserManagement.Controllers
             return res;
         }
 
-        [HttpPost("add-order")]
+        [HttpPost("pay-invoice")]
         [PermissionChecker(350)]
         public async Task<bool> PayInvoice([FromBody] WalletPaymentModel req)
         {
